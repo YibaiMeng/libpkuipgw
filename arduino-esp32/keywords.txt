@@ -1,0 +1,23 @@
+#######################################
+# Syntax Coloring Map For PKU IP Gateway
+####################################### 
+# Class
+#######################################
+
+IPGWClient	KEYWORD1
+IPGWStatus  KEYWORD1
+
+#######################################
+# Methods and Functions 
+#######################################	
+
+connect	KEYWORD2
+
+#######################################
+# Constants
+#######################################
+IPGW_SUCC LITERAL1
+IPGW_NO_CONN LITERAL1
+IPGW_CERT_ERR LITERAL1
+IPGW_PWD_ERR LITERAL1
+IPGW_GENERAL_ERR LITERAL1
