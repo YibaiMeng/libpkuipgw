@@ -4,13 +4,13 @@ A library for accessing the Internet through Peking University's Internet servic
 
 ## Installing
 
-The recommanded way is to use pip to install
+The recommended way is to use pip to install
 ```bash
 pip3 install --user libpkuipgw
 ```
 
 ## Usage
-First initialize an `IPGWClient`object:
+First, initialize an `IPGWClient`object:
 ```
 import libpkuipgw
 cli = libpkuipgw.IPGWClient(username, password)
@@ -20,7 +20,7 @@ If you are on Windows or macOS, you'll need to manually provide your MAC address
 import libpkuipgw
 cli = libpkuipgw.IPGWClient(username, password, MAC) # MAC is a string, formatted like 5C:CF:7F:08:11:17
 ```
-This is because I haven't found a way of portablely getting the device's MAC address.
+This is because I haven't found a way of portably getting the device's MAC address.
 
 To connect to the Internet, call `cli.connect()`
 
@@ -38,5 +38,5 @@ The time format is ISO8601 complient.
 
 # Error Handling
 
-Apart from `get_connections`, returns nothing when everything is allright. If error occurs, an `IPGWError` would be raised. 
+Apart from `get_connections`, returns nothing when everything is all right. If an error occurs, an `IPGWError` would be raised. 
 
