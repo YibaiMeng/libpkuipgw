@@ -1,6 +1,6 @@
 # API of Linux Client
 
-The reverse engineered API is based of Version 1.1 of the offical client, released on 2017-03-23. The process of reverse engineering is recorded in [this file](miti.md).
+The reverse engineered API is based on Version 1.1 of the official client, released on 2017-03-23. The process of reverse engineering is recorded in [this file](miti.md).
 
 The Linux API is simple and straight-forward, so my reimplementations are all based on it. However, the corner cases may still need some work, so don't use it for important stuff.
 
@@ -50,12 +50,12 @@ When successfully authenticated, an example JSON response is:
 }
 ```
 
-Most terms exists for historical reasons, and are now obsolete. The remaining used parameters are explained:
-- CONNECTIONS:The number of connections the account has at the moment.
+Most terms exist for historical reasons and are now obsolete. The remaining used parameters are explained:
+- CONNECTIONS: The number of connections the account has at the moment.
 - BALANCE_CN: The remaining credit of the account, in CNY. `BALANCE_EN` is identical.
 - IP: The assigned LAN IP for this connection. 
 
-When the username doesn't exsit, it returns:
+When the username doesn't exist, it returns:
 ```
 {
     "error":"user not found"
