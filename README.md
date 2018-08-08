@@ -12,6 +12,8 @@ Thankfully, the APIs are pretty straightforward to reimplement. So I have implem
 - `get_connections`: Get connection information under the same account.
 The other functionalities are not frequently used and are better left to the Web interface
 
+The APIs are described in detail [here](API/api_overview.md). The specific APIs of the Linux client are described [here](API/linux_api.md)
+
 Now I can connect my ESP32 or Raspberry Pi to Wireless PKU, or have my Ubuntu automatically connect to school network upon startup. How wonderful!
 
 ## Languages Implemented

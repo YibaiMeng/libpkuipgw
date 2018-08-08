@@ -1,6 +1,6 @@
 # API of Linux Client
 
-The reverse engineered API is based on Version 1.1 of the official client, released on 2017-03-23. The process of reverse engineering is recorded in [this file](miti.md).
+The reverse engineered API is based on Version 1.1 of the official client, released on 2017-03-23. The process of reverse engineering is recorded in [this file](mitm.md).
 
 The Linux API is simple and straight-forward, so my reimplementations are all based on it. However, the corner cases may still need some work, so don't use it for important stuff.
 
