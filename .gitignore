@@ -1,1 +1,13 @@
 ipgw.cfg
+
+## Python Stuff
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Python Distribution / packaging
+.Python
+build/
+dist/
+*.egg-info/
