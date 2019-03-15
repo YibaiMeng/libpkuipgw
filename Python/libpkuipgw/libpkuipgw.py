@@ -1,11 +1,12 @@
-import requests
-
-import time
 import json
 import os
+import time
+
+import requests
 
 class IPGWError(Exception):
     pass
+
 class IPGWClient():
     def __init__(self, _username, _password, _mac=None):
         if not isinstance(_username, str) or not isinstance(_password, str):
