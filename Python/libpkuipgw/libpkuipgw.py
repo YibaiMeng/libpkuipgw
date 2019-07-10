@@ -12,11 +12,13 @@ class IPGWError(Exception):
     pass
 
 # A class for indicating the result of each operation.
-IPGWStatus = collections.namedtuple('IPGWStatus', ['operation', 'status', 'description','data'], defaults=[None, None, None,None])
+IPGWStatus = collections.namedtuple('IPGWStatus', ['operation', 'status', 'description','data'])
+IPGWStatus.__new__.__defaults__ = (None, None, None, None) # For Python 3.6 compatibility https://stackoverflow.com/questions/11351032/namedtuple-and-default-values-for-optional-keyword-arguments
 IPGWStatus.__bool__ = lambda x : x.status == "success"
 
 class IPGWClient():
     def __init__(self, _username, _password, _mac=None):
+        print("Shit")
         if not isinstance(_username, str) or not isinstance(_password, str):
             raise IPGWError("Wrong type for username and password!");
         self.username = _username
