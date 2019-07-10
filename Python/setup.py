@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="libpkuipgw",
-    version="0.2.1",
+    version="0.2.2",
     author="Meng Yibai",
     author_email="mengyibai@pku.edu.cn",
     license="MIT",
