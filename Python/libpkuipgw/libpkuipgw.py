@@ -41,7 +41,7 @@ class IPGWClient():
         payload = { 'cmd' : 'open', 'username': self.username, 'password': self.password, 'iprange' : 'free', 'ip': '', 'lang' : 'en', 'app': '1.0'}    
         r = requests.post(self.url, headers=self.headers, params=payload)
         ans = json.loads(r.text)
-        if ans["succ"] == "":
+        if "succ" in ans and ans["succ"] == "":
             self.balance = ans["BALANCE_CN"]
             self.ip =  ans["IP"]
             self.is_connected = True
