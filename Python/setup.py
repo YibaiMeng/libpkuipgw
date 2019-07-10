@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="libpkuipgw",
-    version="0.1.3",
+    version="0.2.0",
     author="Meng Yibai",
     author_email="mengyibai@pku.edu.cn",
     license="MIT",
@@ -14,7 +14,8 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/YibaiMeng/libpkuipgw",
     packages=["libpkuipgw"],
-    install_requires=["requests"],
+    install_requires=["requests", "netifaces"],
+    scripts=['bin/pkuipgw'],
     classifiers=(
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",

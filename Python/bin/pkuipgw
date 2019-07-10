@@ -1,0 +1,69 @@
+#! /usr/bin/python3
+import libpkuipgw
+
+import json
+import argparse
+import logging
+import sys
+
+if __name__ == "__main__":
+    #logging.basicConfig(level=logging.DEBUG)
+    parser = argparse.ArgumentParser(description="Command line utility to connect to PKU's network.")
+    parser.add_argument("operation",
+                        type=str,
+                        choices=['connect', 'disconnect', 'list', 'check'],
+                        help="Operation to do.")
+    parser.add_argument('-a', '--all',
+                        action="store_true",
+                        help="Used with disconnect. Disconnect all connections")    
+    parser.add_argument('-q', '--quiet',
+                        action="store_true",
+                        help="Keep output to a minimum.")
+    args = parser.parse_args()
+    with open("/home/mengyibai/Scripts/ipgw.cfg") as fp:
+        auth = json.load(fp)
+    cli = libpkuipgw.IPGWClient(auth["username"], auth["password"])
+    res = cli.check_interface()
+    if not res:
+        print("Not connected to Internet. Check your WiFi or Ethernet settings.")
+        sys.exit(1)
+    #operations = {"connect", cli.connect, "disconnect" : cli.disconnect, "disconnect_all" : cli.disconnect_all}
+    if args.operation == "connect":
+        res = cli.connect()
+        if not res:
+            print("Operation " + res.operation + " failed because " + res.description)
+            sys.exit(1)
+        sys.exit(0)
+    elif args.operation == "disconnect" and args.all:
+        res = cli.disconnect_all()
+        if not res:
+            print("Operation " + res.operation + " failed because " + res.description)
+            sys.exit(1)
+        sys.exit(0)
+    elif args.operation == "disconnect" and not args.all:
+        res = cli.disconnect()
+        if not res:
+            print("Operation " + res.operation + " failed because " + res.description)
+            sys.exit(1)
+        sys.exit(0)
+    elif args.operation == "list":
+        res = cli.get_connections()
+        if res:
+            print("%i connections out of 4 permitted" % (len(res)))
+            index = 1
+            for i in res:
+                print(" %i. IP: %s Location: %s Login time: %s" % (index, i["ip"].ljust(15), i["location"].ljust(8),i["login_time"]))
+                index += 1
+            sys.exit(0)
+        else:
+            print("Operation " + res.operation + " failed because " + res.description)
+            sys.exit(1)
+    elif args.operation == "check":
+        res = cli.check_connectivity()
+        if res:
+            print("Connected to Internet.")
+            sys.exit(0)
+        else:
+            print("Not connected to Internet.")
+            sys.exit(1)
+    
