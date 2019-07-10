@@ -5,12 +5,14 @@ import json
 import argparse
 import logging
 import sys
+import os
 
 if __name__ == "__main__":
     #logging.basicConfig(level=logging.DEBUG)
     parser = argparse.ArgumentParser(description="Command line utility to connect to PKU's network.")
     parser.add_argument("operation",
                         type=str,
+                        nargs="?",
                         choices=['connect', 'disconnect', 'list', 'check'],
                         help="Operation to do.")
     parser.add_argument('-a', '--all',
@@ -20,15 +22,34 @@ if __name__ == "__main__":
                         action="store_true",
                         help="Keep output to a minimum.")
     args = parser.parse_args()
-    with open("/home/mengyibai/Scripts/ipgw.cfg") as fp:
-        auth = json.load(fp)
+    auth = None
+    if os.path.isfile(os.path.expanduser("~/.config/pkuipgw/config")):     
+        with open(os.path.expanduser("~/.config/pkuipgw/config")) as fp:
+            try:
+                auth = json.load(fp)
+                assert(isinstance(auth["username"],str) and isinstance(auth["password"],str))
+            except json.decoder.JSONDecodeError:
+                auth = None
+            except AssertionError:
+                auth = None               
+    if not auth:
+        username = input("Please input your username: ")
+        password = input("Please input your password: ")
+        auth = {"username" : username,"password" : password}
+        try:
+            os.mkdir(os.path.expanduser("~/.config/pkuipgw"), 0o755)
+        except FileExistsError:
+            pass
+        with open(os.path.expanduser("~/.config/pkuipgw/config"),"w") as fp:
+            json.dump(auth, fp)
+        os.chmod(os.path.expanduser("~/.config/pkuipgw/config"),0o600)
     cli = libpkuipgw.IPGWClient(auth["username"], auth["password"])
     res = cli.check_interface()
     if not res:
         print("Not connected to Internet. Check your WiFi or Ethernet settings.")
         sys.exit(1)
     #operations = {"connect", cli.connect, "disconnect" : cli.disconnect, "disconnect_all" : cli.disconnect_all}
-    if args.operation == "connect":
+    if args.operation == "connect" or args.operation == None:
         res = cli.connect()
         if not res:
             print("Operation " + res.operation + " failed because " + res.description)
@@ -49,9 +70,9 @@ if __name__ == "__main__":
     elif args.operation == "list":
         res = cli.get_connections()
         if res:
-            print("%i connections out of 4 permitted" % (len(res)))
+            print("%i connections out of 4 permitted" % (len(res.data)))
             index = 1
-            for i in res:
+            for i in res.data:
                 print(" %i. IP: %s Location: %s Login time: %s" % (index, i["ip"].ljust(15), i["location"].ljust(8),i["login_time"]))
                 index += 1
             sys.exit(0)
