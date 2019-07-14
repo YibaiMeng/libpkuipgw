@@ -130,8 +130,8 @@ class IPGWClient():
                 connection["login_time"] = tmp[4*i +3]
                 connection["login_time"] ="T".join(connection["login_time"].split(" "))+"+08" # Make the time ISO_8601 compliant. Needs further check to make sure it adheres to the corner cases.
                 self.connections.append(connection)
-                self.last_check = time.time
-                return IPGWStatus(operation="get_connections", status="success", data=self.connections)
+            self.last_check = time.time
+            return IPGWStatus(operation="get_connections", status="success", data=self.connections)
         else:   
             if "error" in ans:
                 return IPGWStatus(operation="get_connections", status="error", description=ans["error"])
