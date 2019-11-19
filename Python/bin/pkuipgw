@@ -1,4 +1,4 @@
-#! /usr/bin/python3
+#!/usr/bin/python3
 import sys
 #sys.path = [".."] + sys.path # used when debugging
 import libpkuipgw
@@ -12,17 +12,23 @@ import os
 if __name__ == "__main__":
     #logging.basicConfig(level=logging.DEBUG)
     parser = argparse.ArgumentParser(description="Command line utility to connect to PKU's network.")
-    parser.add_argument("operation",
-                        type=str,
-                        nargs="?",
-                        choices=['connect', 'disconnect', 'list', 'check'],
-                        help="Operation to do.")
-    parser.add_argument('-a', '--all',
-                        action="store_true",
-                        help="Used with disconnect. Disconnect all connections")    
     parser.add_argument('-q', '--quiet',
                         action="store_true",
                         help="Keep output to a minimum.")
+    subparsers = parser.add_subparsers(dest="subcommand", help='sub-command help')
+
+    parser_connect = subparsers.add_parser('connect', help='connect to the Internet')
+    
+    
+    parser_disconnect = subparsers.add_parser('disconnect', help='disconnect to the Internet')
+    parser_disconnect.add_argument('-a', '--all', action="store_true",  help="Used with disconnect. Disconnect all connections")    
+    parser_disconnect.add_argument('-s', '--self', action="store_true", help="Disconnect the current connection")
+    parser_disconnect.add_argument('--ip', action="store_true", help="Disconnect connections by specifying their IP addresses.")
+    parser_disconnect.add_argument('connections', nargs="*", help="Specific connections to disconnect")
+    
+    parser_list = subparsers.add_parser('list', help='list all connections')
+    parser_check = subparsers.add_parser('check', help='check for Internet connection')
+    
     args = parser.parse_args()
     auth = None
     if os.path.isfile(os.path.expanduser("~/.config/pkuipgw/config")):     
@@ -51,25 +57,30 @@ if __name__ == "__main__":
         print("Not connected to Internet. Check your WiFi or Ethernet settings.")
         sys.exit(1)
     #operations = {"connect", cli.connect, "disconnect" : cli.disconnect, "disconnect_all" : cli.disconnect_all}
-    if args.operation == "connect" or args.operation == None:
+    if args.subcommand == "connect" or args.subcommand == None:
         res = cli.connect()
         if not res:
             print("Operation " + res.operation + " failed because " + res.description)
             sys.exit(1)
         sys.exit(0)
-    elif args.operation == "disconnect" and args.all:
-        res = cli.disconnect_all()
-        if not res:
-            print("Operation " + res.operation + " failed because " + res.description)
-            sys.exit(1)
+    elif args.subcommand == "disconnect":
+        if args.all:
+            res = cli.disconnect_all()
+            if not res:
+                print("Operation " + res.operation + " failed because " + res.description)
+                sys.exit(1)
+        elif args.connections:
+            if args.ip:
+                for ip in args.connections:
+                    res = cli.disconnect(ip)
+                    if not res:
+                        print("Operation " + res.operation + " failed because " + res.description)
+                    else:
+                        print("IP %s disconnected!" % ip)
+            else:
+                raise NotImplementedError
         sys.exit(0)
-    elif args.operation == "disconnect" and not args.all:
-        res = cli.disconnect()
-        if not res:
-            print("Operation " + res.operation + " failed because " + res.description)
-            sys.exit(1)
-        sys.exit(0)
-    elif args.operation == "list":
+    elif args.subcommand == "list":
         res = cli.get_connections()
         if res:
             print("%i connections out of 4 permitted" % (len(res.data)))
@@ -81,7 +92,7 @@ if __name__ == "__main__":
         else:
             print("Operation " + res.operation + " failed because " + res.description)
             sys.exit(1)
-    elif args.operation == "check":
+    elif args.subcommand == "check":
         res = cli.check_connectivity()
         if res:
             print("Connected to Internet.")
@@ -90,3 +101,4 @@ if __name__ == "__main__":
             print("Not connected to Internet.")
             sys.exit(1)
     
+
