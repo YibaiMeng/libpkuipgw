@@ -1,6 +1,8 @@
 # libpkuipgw
 A library for accessing the Internet through Peking University's Internet service.
 
+I have graduated, so I am unable to do testing and respond to potential API changes.
+
 ## Overview
 All users of Peking University's Internet service need to authenticate when attempting to access out of campus resources. The user can either visit the website `its.pku.edu.cn` or use a variety of official clients.
 
